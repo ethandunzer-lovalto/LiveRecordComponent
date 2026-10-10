@@ -107,36 +107,38 @@
   </template>
 
   <template lwc:if={hasViewers}>
-    <div class="viewers" role="group" aria-label={viewersLabel}>
-      <span
-        class="slds-text-body_small slds-text-color_weak slds-m-right_x-small"
-        >Also viewing</span
+    <lightning-card title="Also viewing" class="viewers-card">
+      <div
+        class="slds-p-horizontal_medium viewers"
+        role="group"
+        aria-label={viewersLabel}
       >
-      <ul class="stack">
-        <template for:each={visibleAvatars} for:item="viewer">
-          <li key={viewer.key} class="stack-item" title={viewer.title}>
-            <lightning-avatar
-              size="small"
-              variant="circle"
-              src={viewer.src}
-              initials={viewer.initials}
-              fallback-icon-name="standard:user"
-              alternative-text={viewer.title}
-            ></lightning-avatar>
-          </li>
-        </template>
-        <template lwc:if={hasOverflow}>
-          <li class="stack-item overflow" title={overflowTitle}>
-            <span class="slds-avatar slds-avatar_circle slds-avatar_small">
-              <abbr
-                class="slds-avatar__initials slds-avatar__initials_inverse"
-                title={overflowTitle}
-                >{overflowText}</abbr
-              >
-            </span>
-          </li>
-        </template>
-      </ul>
-    </div>
+        <ul class="stack">
+          <template for:each={visibleAvatars} for:item="viewer">
+            <li key={viewer.key} class="stack-item" title={viewer.title}>
+              <lightning-avatar
+                size="small"
+                variant="circle"
+                src={viewer.src}
+                initials={viewer.initials}
+                fallback-icon-name="standard:user"
+                alternative-text={viewer.title}
+              ></lightning-avatar>
+            </li>
+          </template>
+          <template lwc:if={hasOverflow}>
+            <li class="stack-item overflow" title={overflowTitle}>
+              <span class="slds-avatar slds-avatar_circle slds-avatar_small">
+                <abbr
+                  class="slds-avatar__initials slds-avatar__initials_inverse"
+                  title={overflowTitle}
+                  >{overflowText}</abbr
+                >
+              </span>
+            </li>
+          </template>
+        </ul>
+      </div>
+    </lightning-card>
   </template>
 </template>

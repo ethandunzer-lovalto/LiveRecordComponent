@@ -5,7 +5,13 @@
 .viewers {
   display: flex;
   align-items: center;
-  padding: 0.25rem 0;
+}
+
+/* A gap between the card and the admin status line or banner above it */
+.admin-status ~ .viewers-card,
+c-record-presence-banner ~ .viewers-card {
+  display: block;
+  margin-top: 0.5rem;
 }
 
 /* Overlapping avatars, each with a ring so they stay distinct */

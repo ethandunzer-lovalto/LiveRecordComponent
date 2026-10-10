@@ -8,7 +8,7 @@ Standard Lightning record pages don't say that anyone else is on the record, and
 
 Key features:
 
-- **Presence avatars**: an avatar stack of the other users on the record in the last minute or so, with their names on hover. Beyond the configured maximum they collapse into `+N`. The component takes no space when no one else is there.
+- **Presence avatars**: an **Also viewing** card with an avatar stack of the other users on the record in the last minute or so, with their names on hover. Beyond the configured maximum they collapse into `+N`. The card only appears when someone else is there; otherwise the component takes no space.
 - **Stale record alert**: within one heartbeat (about 25 seconds) of another user's save, a modal says who changed the record and when. **Refresh now** has focus and reloads the record's data on the page without reloading the browser page. Each change alerts once; a newer change alerts again, and a change that arrives while the modal is open updates it instead of opening a second one.
 - **What changed**: when the object has field history tracking, the modal lists the changes, such as `Stage: Proposal → Closed Won`, with the user's locale and time zone, picklist labels and currency formats. Fields the user can't read are left out.
 - **Sticky banner**: if the user chooses **Keep working on this version**, an amber banner stays in the component's place until they refresh or the page catches up (for example, after they save).
@@ -25,11 +25,11 @@ The **Live Record Component** unlocked package has no namespace, so the API name
 
 Version **1.0.0** is a beta until it's promoted, so for now it can't be installed in production orgs:
 
-- Sandbox: https://test.salesforce.com/packaging/installPackage.apexp?p0=04tbm000000nqFBAAY
+- Sandbox: https://test.salesforce.com/packaging/installPackage.apexp?p0=04tbm000000nqGnAAI
 - Or with the Salesforce CLI:
 
   ```sh
-  sf package install --package 04tbm000000nqFBAAY --target-org <your org> --wait 20
+  sf package install --package 04tbm000000nqGnAAI --target-org <your org> --wait 20
   ```
 
 Choose **Install for Admins Only**; access for everyone else comes from the permission sets.

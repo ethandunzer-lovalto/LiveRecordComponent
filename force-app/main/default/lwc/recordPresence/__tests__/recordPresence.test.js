@@ -279,12 +279,15 @@ describe("c-record-presence", () => {
   });
 
   describe("viewers", () => {
-    it("shows other viewers with their names", async () => {
+    it("shows other viewers with their names in an Also viewing card", async () => {
       heartbeat.mockResolvedValue(
         snapshot({ viewers: [viewer(1), viewer(2)] })
       );
       const element = await render();
 
+      const card = element.shadowRoot.querySelector("lightning-card");
+      expect(card.title).toBe("Also viewing");
+      expect(card.querySelectorAll("lightning-avatar")).toHaveLength(2);
       const shown = [...avatars(element)];
       expect(shown.map((avatar) => avatar.alternativeText)).toEqual([
         "Viewer 1 is viewing",
@@ -312,7 +315,7 @@ describe("c-record-presence", () => {
     it("renders nothing when no one else is here", async () => {
       const element = await render();
 
-      expect(element.shadowRoot.querySelector(".viewers")).toBeNull();
+      expect(element.shadowRoot.querySelector("lightning-card")).toBeNull();
       expect(banner(element)).toBeNull();
       expect(element.shadowRoot.querySelector(".admin-status")).toBeNull();
       expect(
