@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>67.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>Record Presence</masterLabel>
+    <description
+  >Shows who else is viewing the record, and alerts users when someone else saves it so they can refresh instead of working on an outdated version.</description>
+    <targets>
+        <target>lightning__RecordPage</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__RecordPage">
+            <property
+        name="heartbeatSeconds"
+        type="Integer"
+        default="25"
+        min="15"
+        max="120"
+        label="Heartbeat Interval (seconds)"
+        description="How often each open record tab checks in, from 15 to 120 seconds. Alerts arrive within about one interval of a change. Each check is one Apex call."
+      />
+            <property
+        name="showViewers"
+        type="Boolean"
+        default="true"
+        label="Show Viewers"
+        description="Show the avatars of other users viewing the record. Turn off to use only the record updated alerts."
+      />
+            <property
+        name="maxAvatars"
+        type="Integer"
+        default="4"
+        min="1"
+        max="20"
+        label="Maximum Avatars"
+        description="Avatars shown before the rest collapse into +N."
+      />
+            <property
+        name="alertStyle"
+        type="String"
+        datasource="Modal,Banner only"
+        default="Modal"
+        label="Alert Style"
+        description="How users are told someone else changed the record: a modal asking them to refresh, or only the banner in the component&apos;s place."
+      />
+            <property
+        name="autoRefreshSeconds"
+        type="Integer"
+        default="0"
+        min="0"
+        max="60"
+        label="Auto-Refresh Countdown (seconds)"
+        description="0 = off. Above 0, the modal refreshes the record by itself after this many seconds unless the user clicks or presses a key in it. Warning: the record reloads even while the user is editing it. The standard record detail and Edit modal keep unsaved edits, but other components on the page can lose unsaved input."
+      />
+            <supportedFormFactors>
+                <supportedFormFactor type="Large" />
+            </supportedFormFactors>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

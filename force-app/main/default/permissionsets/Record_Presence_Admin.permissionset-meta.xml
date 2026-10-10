@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <classAccesses>
+        <apexClass>PresenceService</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <customPermissions>
+        <enabled>true</enabled>
+        <name>Record_Presence_Admin</name>
+    </customPermissions>
+    <description
+  >Shows the Record Presence component&apos;s admin status line and details: storage mode, watched fields, history tracking and heartbeat interval. Includes the access in Record Presence User.</description>
+    <hasActivationRequired>false</hasActivationRequired>
+    <label>Record Presence Admin</label>
+</PermissionSet>

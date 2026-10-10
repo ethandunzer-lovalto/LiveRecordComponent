@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Key__c</fullName>
+    <caseSensitive>true</caseSensitive>
+    <description
+  >Record ID and user ID joined with a colon (recordId:userId). The upsert key, so each user has one row per record.</description>
+    <externalId>true</externalId>
+    <label>Key</label>
+    <length>37</length>
+    <required>true</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>true</unique>
+</CustomField>

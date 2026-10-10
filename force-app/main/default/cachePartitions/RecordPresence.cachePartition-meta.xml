@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<PlatformCachePartition xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description
+  >Who is viewing which record, plus short-lived lookups for the Record Presence component. Allocate at least 1 MB of Org cache after install; with no capacity, presence falls back to the Presence object.</description>
+    <isDefaultPartition>false</isDefaultPartition>
+    <masterLabel>RecordPresence</masterLabel>
+    <platformCachePartitionTypes>
+        <allocatedCapacity>0</allocatedCapacity>
+        <allocatedPartnerCapacity>0</allocatedPartnerCapacity>
+        <allocatedPurchasedCapacity>0</allocatedPurchasedCapacity>
+        <allocatedTrialCapacity>0</allocatedTrialCapacity>
+        <cacheType>Session</cacheType>
+    </platformCachePartitionTypes>
+    <platformCachePartitionTypes>
+        <allocatedCapacity>0</allocatedCapacity>
+        <allocatedPartnerCapacity>0</allocatedPartnerCapacity>
+        <allocatedPurchasedCapacity>0</allocatedPurchasedCapacity>
+        <allocatedTrialCapacity>0</allocatedTrialCapacity>
+        <cacheType>Organization</cacheType>
+    </platformCachePartitionTypes>
+</PlatformCachePartition>

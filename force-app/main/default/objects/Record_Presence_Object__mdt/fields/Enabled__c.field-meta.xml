@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Enabled__c</fullName>
+    <defaultValue>true</defaultValue>
+    <description
+  >Unchecked: the Record Presence component renders nothing on this object&apos;s record pages and sends no heartbeats.</description>
+    <externalId>false</externalId>
+    <fieldManageability>SubscriberControlled</fieldManageability>
+    <inlineHelpText
+  >Uncheck to turn the component off on this object&apos;s record pages.</inlineHelpText>
+    <label>Enabled</label>
+    <type>Checkbox</type>
+</CustomField>

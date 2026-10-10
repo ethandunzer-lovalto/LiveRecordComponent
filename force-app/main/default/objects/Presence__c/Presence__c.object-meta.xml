@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <deploymentStatus>Deployed</deploymentStatus>
+    <description
+  >Fallback store for the Record Presence component, used only when the RecordPresence Org cache partition has no capacity. One row per user per record, refreshed by each heartbeat. Rows are hard-deleted by PresencePurgeJob an hour after they were last refreshed; don&apos;t enable field history, reports or search on this object.</description>
+    <enableActivities>false</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>false</enableHistory>
+    <enableLicensing>false</enableLicensing>
+    <enableReports>false</enableReports>
+    <enableSearch>false</enableSearch>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <externalSharingModel>Private</externalSharingModel>
+    <label>Presence</label>
+    <nameField>
+        <label>Presence Key</label>
+        <type>Text</type>
+    </nameField>
+    <pluralLabel>Presences</pluralLabel>
+    <sharingModel>Private</sharingModel>
+    <visibility>Public</visibility>
+</CustomObject>

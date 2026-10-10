@@ -1,0 +1,144 @@
+<template>
+  <!-- Admins: a status line, with details of how presence is set up for this object -->
+  <template lwc:if={isAdmin}>
+    <div
+      class="slds-scoped-notification slds-scoped-notification_light admin-status"
+      role="status"
+    >
+      <div class="slds-media slds-media_center">
+        <div class="slds-media__figure">
+          <lightning-icon
+            icon-name={adminIcon}
+            size="x-small"
+            alternative-text="Record presence"
+          ></lightning-icon>
+        </div>
+        <div class="slds-media__body">
+          <p>
+            {adminStatus}
+            <button
+              class="slds-button slds-m-left_x-small details-toggle"
+              aria-expanded={detailsExpanded}
+              onclick={toggleDetails}
+            >
+              Details
+            </button>
+          </p>
+        </div>
+      </div>
+      <template lwc:if={detailsOpen}>
+        <section
+          class="slds-popover slds-nubbin_top-left details-popover"
+          role="dialog"
+          aria-label="Record presence details"
+          onkeydown={handleDetailsKeyDown}
+        >
+          <button
+            class="slds-button slds-button_icon slds-button_icon-small slds-float_right slds-popover__close"
+            title="Close"
+            onclick={closeDetails}
+          >
+            <lightning-icon
+              icon-name="utility:close"
+              size="x-small"
+              alternative-text="Close"
+            ></lightning-icon>
+          </button>
+          <div class="slds-popover__body">
+            <h2 class="slds-text-heading_small slds-m-bottom_x-small">
+              Record presence
+            </h2>
+            <dl class="slds-list_horizontal slds-wrap details">
+              <dt class="slds-item_label slds-text-color_weak">Storage</dt>
+              <dd class="slds-item_detail storage">{storageLabel}</dd>
+              <dt class="slds-item_label slds-text-color_weak">Heartbeat</dt>
+              <dd class="slds-item_detail">
+                Every {intervalSeconds} seconds (±20%)
+              </dd>
+              <dt class="slds-item_label slds-text-color_weak">Object</dt>
+              <dd class="slds-item_detail">{objectApiName}</dd>
+              <dt class="slds-item_label slds-text-color_weak">
+                Field history
+              </dt>
+              <dd class="slds-item_detail">{historyLabel}</dd>
+              <template lwc:if={lastError}>
+                <dt class="slds-item_label slds-text-color_weak">Last error</dt>
+                <dd class="slds-item_detail slds-text-color_error">
+                  {lastError}
+                </dd>
+              </template>
+            </dl>
+            <h3
+              class="slds-text-title_caps slds-m-top_small slds-m-bottom_xx-small"
+            >
+              Watched fields
+            </h3>
+            <template lwc:if={hasWatchedFieldRows}>
+              <ul class="watched-fields">
+                <template for:each={watchedFieldRows} for:item="row">
+                  <li key={row.key} class={row.className}>
+                    <span class="watched-name">{row.name}</span>
+                    <span>{row.status}</span>
+                  </li>
+                </template>
+              </ul>
+            </template>
+            <template lwc:else>
+              <p>None: any change by another user alerts.</p>
+            </template>
+          </div>
+        </section>
+      </template>
+    </div>
+  </template>
+  <template lwc:elseif={showBuilderPlaceholder}>
+    <p class="slds-text-body_small slds-text-color_weak builder-placeholder">
+      Record Presence: shows who else is viewing the record, and alerts users
+      when someone else changes it. Shows nothing when no one else is here.
+    </p>
+  </template>
+
+  <template lwc:if={showBanner}>
+    <c-record-presence-banner
+      changed-by={bannerChangedBy}
+      changed-at={bannerChangedAt}
+      onrefresh={handleBannerRefresh}
+    ></c-record-presence-banner>
+  </template>
+
+  <template lwc:if={hasViewers}>
+    <lightning-card title="Also viewing" class="viewers-card">
+      <div
+        class="slds-p-horizontal_medium viewers"
+        role="group"
+        aria-label={viewersLabel}
+      >
+        <ul class="stack">
+          <template for:each={visibleAvatars} for:item="viewer">
+            <li key={viewer.key} class="stack-item" title={viewer.title}>
+              <lightning-avatar
+                size="small"
+                variant="circle"
+                src={viewer.src}
+                initials={viewer.initials}
+                fallback-icon-name="standard:user"
+                alternative-text={viewer.title}
+              ></lightning-avatar>
+            </li>
+          </template>
+          <template lwc:if={hasOverflow}>
+            <li class="stack-item overflow" title={overflowTitle}>
+              <span class="slds-avatar slds-avatar_circle slds-avatar_small">
+                <abbr
+                  class="slds-avatar__initials slds-avatar__initials_inverse"
+                  title={overflowTitle}
+                  >{overflowText}</abbr
+                >
+              </span>
+            </li>
+          </template>
+        </ul>
+      </div>
+    </lightning-card>
+  </template>
+</template>

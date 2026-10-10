@@ -1,0 +1,58 @@
+:host {
+  display: block;
+}
+
+.viewers {
+  display: flex;
+  align-items: center;
+}
+
+/* A gap between the card and the admin status line or banner above it */
+.admin-status ~ .viewers-card,
+c-record-presence-banner ~ .viewers-card {
+  display: block;
+  margin-top: 0.5rem;
+}
+
+/* Overlapping avatars, each with a ring so they stay distinct */
+.stack {
+  display: flex;
+}
+
+.stack-item {
+  border: 2px solid var(--slds-g-color-neutral-base-100, #fff);
+  border-radius: 50%;
+  line-height: 0;
+}
+
+.stack-item + .stack-item {
+  margin-left: -0.375rem;
+}
+
+.overflow .slds-avatar__initials {
+  font-size: 0.625rem;
+}
+
+.admin-status {
+  position: relative;
+}
+
+/* Sits on the status text's baseline */
+.details-toggle {
+  vertical-align: baseline;
+}
+
+.details-popover {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 7000;
+  margin-top: 0.75rem;
+  width: 26rem;
+  max-width: 90vw;
+}
+
+.watched-name {
+  font-weight: var(--slds-g-font-weight-bold, 700);
+  margin-right: 0.5rem;
+}

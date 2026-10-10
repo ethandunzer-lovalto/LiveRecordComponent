@@ -1,0 +1,52 @@
+<template>
+  <lightning-modal-header
+    label="This record has been updated"
+  ></lightning-modal-header>
+  <lightning-modal-body>
+    <p class="headline">
+      {headline} The version you're looking at is out of date.
+    </p>
+    <template lwc:if={hasChanges}>
+      <h2
+        class="slds-text-heading_small slds-m-top_medium slds-m-bottom_x-small"
+      >
+        What changed
+      </h2>
+      <ul class="slds-list_dotted changes">
+        <template for:each={changes} for:item="change">
+          <li key={change.key} class="change">
+            <span class="field">{change.fieldLabel}:</span>
+            <span class="detail">{change.detail}</span>
+            <template lwc:if={change.changedByName}>
+              <span class="author slds-text-color_weak"
+                >({change.changedByName})</span
+              >
+            </template>
+          </li>
+        </template>
+        <template lwc:if={moreText}>
+          <li class="more"><em>{moreText}</em></li>
+        </template>
+      </ul>
+    </template>
+    <template lwc:if={countingDown}>
+      <p class="slds-m-top_medium countdown" aria-live="polite">
+        {countdownText}
+      </p>
+    </template>
+  </lightning-modal-body>
+  <lightning-modal-footer>
+    <lightning-button
+      label="Keep working on this version"
+      data-id="keep"
+      onclick={handleKeep}
+    ></lightning-button>
+    <lightning-button
+      variant="brand"
+      label="Refresh now"
+      class="slds-m-left_x-small"
+      data-id="refresh"
+      onclick={handleRefresh}
+    ></lightning-button>
+  </lightning-modal-footer>
+</template>
