@@ -21,16 +21,13 @@ Presence is ephemeral: it lives in Platform Cache, or in a fallback object whose
 
 ## Installation
 
-The **Live Record Component** unlocked package has no namespace, so the API names are the same as in this repo. It can't be installed into an org that has its own namespace.
+Install the unlocked package, version **1.0.3**:
 
-Version **1.0.3** is a beta until it's promoted, so for now it can't be installed in production orgs:
-
+- Production or Developer Edition: https://login.salesforce.com/packaging/installPackage.apexp?p0=04tbm000000nr1ZAAQ
 - Sandbox: https://test.salesforce.com/packaging/installPackage.apexp?p0=04tbm000000nr1ZAAQ
-- Or with the Salesforce CLI:
+- Or with the Salesforce CLI: `sf package install --package 04tbm000000nr1ZAAQ --target-org <your org> --wait 20`
 
-  ```sh
-  sf package install --package 04tbm000000nr1ZAAQ --target-org <your org> --wait 20
-  ```
+The package has no namespace, so the API names are the same as in this repo. It can't be installed into an org that has its own namespace.
 
 Choose **Install for Admins Only**; access for everyone else comes from the permission sets.
 
