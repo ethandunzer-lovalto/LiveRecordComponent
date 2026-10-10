@@ -23,13 +23,13 @@ Presence is ephemeral: it lives in Platform Cache, or in a fallback object whose
 
 The **Live Record Component** unlocked package has no namespace, so the API names are the same as in this repo. It can't be installed into an org that has its own namespace.
 
-Version **1.0.0** is a beta until it's promoted, so for now it can't be installed in production orgs:
+Version **1.0.3** is a beta until it's promoted, so for now it can't be installed in production orgs:
 
-- Sandbox: https://test.salesforce.com/packaging/installPackage.apexp?p0=04tbm000000nqzxAAA
+- Sandbox: https://test.salesforce.com/packaging/installPackage.apexp?p0=04tbm000000nr1ZAAQ
 - Or with the Salesforce CLI:
 
   ```sh
-  sf package install --package 04tbm000000nqzxAAA --target-org <your org> --wait 20
+  sf package install --package 04tbm000000nr1ZAAQ --target-org <your org> --wait 20
   ```
 
 Choose **Install for Admins Only**; access for everyone else comes from the permission sets.
@@ -127,12 +127,15 @@ The Apex tests replace field history, permission assignments and Custom Metadata
 
 The unlocked package, **Live Record Component** (`0Hobm0000007FLhCAM`, no namespace), is owned by the Dev Hub and built from `force-app`.
 
-1. Set `versionNumber` and `versionName` in `sfdx-project.json` to the new version, for example `1.1.0.NEXT` and `1.1.0`.
+1. Set `versionNumber` and `versionName` in `sfdx-project.json` to the new version, for example `1.1.0.NEXT` and `1.1.0`. Bump the version for each build handed over for testing, too: Setup > Installed Packages shows the version and beta number, such as "1.0.3 (Beta 1)", so builds of the same version all look alike there.
 2. Build the version. This builds the package in a temporary org from `config/project-scratch-def.json`, runs the Apex tests, and adds the new `04t` ID to `packageAliases` in `sfdx-project.json`; commit that change:
    ```sh
    sf package version create --package "Live Record Component" --installation-key-bypass --code-coverage --wait 30 --target-dev-hub <Dev Hub>
    ```
-3. The new version is a beta, which only installs in scratch orgs and sandboxes. Install it into a new scratch org, and into one that has the previous released version, to check a fresh install and an upgrade.
+3. The new version is a beta, which can't be installed in production orgs. Install it as an update over the version in the Dev Hub org or a sandbox, and into a new scratch org to check a fresh install:
+   ```sh
+   sf package install --package "Live Record Component@1.1.0-1" --target-org <org> --upgrade-type Mixed --wait 20
+   ```
 4. Promote it, so it can be installed in production orgs:
    ```sh
    sf package version promote --package "Live Record Component@1.1.0-1" --target-dev-hub <Dev Hub>
