@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customPermissions>
+        <enabled>true</enabled>
+        <name>Record_Presence_Hidden</name>
+    </customPermissions>
+    <customPermissions>
+        <enabled>true</enabled>
+        <name>Record_Presence_Ignore_Changes</name>
+    </customPermissions>
+    <description
+  >For integration and automation users: their changes never trigger the Record Presence alert, and they&apos;re never shown as viewers.</description>
+    <hasActivationRequired>false</hasActivationRequired>
+    <label>Record Presence Integration User</label>
+</PermissionSet>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<CustomPermission xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description
+  >Changes this user makes to records never trigger the Record Presence &quot;record updated&quot; alert. Intended for integration and automation users.</description>
+    <isLicensed>false</isLicensed>
+    <label>Record Presence Ignore Changes</label>
+</CustomPermission>

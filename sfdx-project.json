@@ -2,11 +2,20 @@
   "packageDirectories": [
     {
       "path": "force-app",
-      "default": true
+      "default": true,
+      "package": "Live Record Component",
+      "versionName": "1.0.0",
+      "versionNumber": "1.0.0.NEXT",
+      "versionDescription": "Record presence and stale record alerts for Lightning record pages: see who else is viewing a record, and get prompted to refresh when someone else changes it.",
+      "definitionFile": "config/project-scratch-def.json"
     }
   ],
   "name": "LiveRecordComponent",
   "namespace": "",
   "sfdcLoginUrl": "https://login.salesforce.com",
-  "sourceApiVersion": "67.0"
+  "sourceApiVersion": "67.0",
+  "packageAliases": {
+    "Live Record Component": "0Hobm0000007FLhCAM",
+    "Live Record Component@1.0.0-1": "04tbm000000nqFBAAY"
+  }
 }

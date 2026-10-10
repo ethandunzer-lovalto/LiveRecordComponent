@@ -1,0 +1,8 @@
+.field {
+  font-weight: var(--slds-g-font-weight-bold, 700);
+  margin-right: 0.25rem;
+}
+
+.author {
+  margin-left: 0.25rem;
+}

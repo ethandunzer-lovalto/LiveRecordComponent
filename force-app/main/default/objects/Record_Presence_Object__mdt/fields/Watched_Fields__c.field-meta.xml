@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Watched_Fields__c</fullName>
+    <description
+  >Comma-separated API names of the fields whose changes trigger the alert, for example StageName, Amount, OwnerId. Each must have field history tracking turned on. Leave blank to alert on any change by another user.</description>
+    <externalId>false</externalId>
+    <fieldManageability>SubscriberControlled</fieldManageability>
+    <inlineHelpText
+  >Comma-separated field API names, for example StageName, Amount, OwnerId. Each needs field history tracking. Blank = any change by another user triggers the alert.</inlineHelpText>
+    <label>Watched Fields</label>
+    <length>32768</length>
+    <type>LongTextArea</type>
+    <visibleLines>3</visibleLines>
+</CustomField>

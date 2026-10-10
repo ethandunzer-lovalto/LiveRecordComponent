@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <classAccesses>
+        <apexClass>PresenceService</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <description
+  >Lets the Record Presence component run for the user: shows who else is viewing a record and alerts them when someone else changes it. Required for everyone who sees the component.</description>
+    <hasActivationRequired>false</hasActivationRequired>
+    <label>Record Presence User</label>
+</PermissionSet>
