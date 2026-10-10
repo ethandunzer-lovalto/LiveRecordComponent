@@ -38,6 +38,8 @@ async function flush() {
 describe("c-record-presence admin view", () => {
   beforeEach(() => {
     leave.mockResolvedValue();
+    // jsdom has no layout: report the record page as on screen
+    jest.spyOn(Element.prototype, "getClientRects").mockReturnValue([{}]);
   });
 
   afterEach(() => {

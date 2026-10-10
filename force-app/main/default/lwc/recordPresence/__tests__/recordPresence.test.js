@@ -87,6 +87,13 @@ let tabHidden = false;
 // Resolves the modal that's open, like the user choosing a button
 let closeModal;
 
+// jsdom has no layout: report whether the record page is on screen, or hidden by Lightning after navigating away
+function setPageDisplayed(displayed) {
+  jest
+    .spyOn(Element.prototype, "getClientRects")
+    .mockReturnValue(displayed ? [{}] : []);
+}
+
 describe("c-record-presence", () => {
   beforeAll(() => {
     Object.defineProperty(document, "hidden", {
@@ -100,6 +107,7 @@ describe("c-record-presence", () => {
     jest.setSystemTime(T0 + 40000);
     // No jitter: heartbeats exactly every heartbeatSeconds
     jest.spyOn(Math, "random").mockReturnValue(0.5);
+    setPageDisplayed(true);
     tabHidden = false;
     heartbeat.mockResolvedValue(snapshot());
     leave.mockResolvedValue();
@@ -260,6 +268,66 @@ describe("c-record-presence", () => {
       expect(leave).toHaveBeenCalledTimes(2);
       await advance(60000);
       expect(heartbeat).toHaveBeenCalledTimes(1);
+    });
+
+    it("leaves and stops when the user navigates elsewhere in Lightning, which keeps the page hidden", async () => {
+      await render();
+      expect(heartbeat).toHaveBeenCalledTimes(1);
+
+      setPageDisplayed(false);
+      await advance(2000);
+
+      expect(leave).toHaveBeenCalledWith({ recordId: RECORD_ID });
+      await advance(120000);
+      expect(heartbeat).toHaveBeenCalledTimes(1);
+      expect(leave).toHaveBeenCalledTimes(1);
+    });
+
+    it("sends a heartbeat straight away when the user comes back to the page", async () => {
+      await render();
+      setPageDisplayed(false);
+      await advance(30000);
+      expect(heartbeat).toHaveBeenCalledTimes(1);
+
+      setPageDisplayed(true);
+      await advance(2000);
+      expect(heartbeat).toHaveBeenCalledTimes(2);
+
+      await advance(25000);
+      expect(heartbeat).toHaveBeenCalledTimes(3);
+    });
+
+    it("leaves again when a heartbeat lands after the user navigated away", async () => {
+      let resolveHeartbeat;
+      heartbeat.mockImplementation(
+        () =>
+          new Promise((resolve) => {
+            resolveHeartbeat = resolve;
+          })
+      );
+      await render();
+
+      setPageDisplayed(false);
+      await advance(2000);
+      expect(leave).toHaveBeenCalledTimes(1);
+      resolveHeartbeat(snapshot());
+      await flush();
+
+      expect(leave).toHaveBeenCalledTimes(2);
+      await advance(60000);
+      expect(heartbeat).toHaveBeenCalledTimes(1);
+    });
+
+    it("waits for the page to be shown when it starts hidden", async () => {
+      setPageDisplayed(false);
+      await render();
+      expect(heartbeat).not.toHaveBeenCalled();
+
+      setPageDisplayed(true);
+      await advance(2000);
+
+      expect(heartbeat).toHaveBeenCalledTimes(1);
+      expect(leave).not.toHaveBeenCalled();
     });
 
     it("starts over when the page is reused for another record", async () => {

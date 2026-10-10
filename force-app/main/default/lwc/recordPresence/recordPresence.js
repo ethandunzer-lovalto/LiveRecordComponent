@@ -29,9 +29,11 @@ const FAILURES_BEFORE_HIDING = 3;
 const BANNER_ONLY = "Banner only";
 // What the modal closes with when the page closes it because the user already has the latest version
 const CLOSED_AS_CURRENT = "current";
+// How often to check whether the record page is still on screen
+const DISPLAY_CHECK_MS = 2000;
 
 // Shows who else is viewing the record, and interrupts the user when someone else saves it so they don't keep working
-// on an outdated version. Sends a heartbeat to PresenceService every heartbeatSeconds while the tab is visible.
+// on an outdated version. Sends a heartbeat to PresenceService every heartbeatSeconds while the page is on screen.
 export default class RecordPresence extends LightningElement {
   @api objectApiName;
   @api heartbeatSeconds = DEFAULT_HEARTBEAT_SECONDS;
@@ -64,6 +66,9 @@ export default class RecordPresence extends LightningElement {
   _recordId;
   connected = false;
   timerId = null;
+  displayCheckId = null;
+  // Whether the record page is on screen, rather than kept hidden by Lightning after the user navigated away
+  pageDisplayed = false;
   inFlight = false;
   modalOpen = false;
   // { update, close } of the open modal, once it has registered
@@ -124,12 +129,21 @@ export default class RecordPresence extends LightningElement {
     this.connected = true;
     document.addEventListener("visibilitychange", this.handleVisibilityChange);
     window.addEventListener("pagehide", this.handlePageHide);
+    // When the user navigates elsewhere in Lightning, the record page is usually kept alive but hidden, so the
+    // component isn't disconnected. Check every couple of seconds whether the page is still on screen.
+    this.pageDisplayed = this.isPageDisplayed();
+    // eslint-disable-next-line @lwc/lwc/no-async-operation
+    this.displayCheckId = setInterval(
+      this.checkPageDisplayed,
+      DISPLAY_CHECK_MS
+    );
     this.beat();
   }
 
   disconnectedCallback() {
     this.connected = false;
     this.clearTimer();
+    clearInterval(this.displayCheckId);
     document.removeEventListener(
       "visibilitychange",
       this.handleVisibilityChange
@@ -138,7 +152,8 @@ export default class RecordPresence extends LightningElement {
     this.sendLeave(this.recordId);
   }
 
-  // No heartbeats from hidden tabs; one straight away when the tab is shown again
+  // No heartbeats from hidden browser tabs, so the user drops off after the staleness window (a quick look at another
+  // tab doesn't remove them); one straight away when the tab is shown again
   handleVisibilityChange = () => {
     if (document.hidden) {
       this.clearTimer();
@@ -151,6 +166,32 @@ export default class RecordPresence extends LightningElement {
     this.sendLeave(this.recordId);
   };
 
+  // Lightning hides pages the user navigated away from with display: none on a container, which leaves the
+  // component's host without a layout box
+  isPageDisplayed() {
+    try {
+      return this.template.host.getClientRects().length > 0;
+    } catch {
+      return true;
+    }
+  }
+
+  // The user navigated away: stop, and remove them now rather than after the staleness window. They came back to the
+  // page: heartbeat straight away.
+  checkPageDisplayed = () => {
+    const displayed = this.isPageDisplayed();
+    if (displayed === this.pageDisplayed) {
+      return;
+    }
+    this.pageDisplayed = displayed;
+    if (displayed) {
+      this.beat();
+    } else {
+      this.clearTimer();
+      this.sendLeave(this.recordId);
+    }
+  };
+
   // ---- Heartbeat loop ----
 
   beat() {
@@ -160,6 +201,7 @@ export default class RecordPresence extends LightningElement {
       !this.recordId ||
       !this.enabled ||
       document.hidden ||
+      !this.pageDisplayed ||
       this.inFlight
     ) {
       return;
@@ -188,6 +230,9 @@ export default class RecordPresence extends LightningElement {
         this.inFlight = false;
         if (recordId !== this.recordId) {
           this.beat();
+        } else if (this.connected && !this.pageDisplayed) {
+          // The user navigated away while this heartbeat was on its way, so it may have landed after their leave
+          this.sendLeave(recordId);
         } else {
           this.scheduleNext();
         }
@@ -196,7 +241,12 @@ export default class RecordPresence extends LightningElement {
 
   scheduleNext() {
     this.clearTimer();
-    if (!this.connected || !this.enabled || document.hidden) {
+    if (
+      !this.connected ||
+      !this.enabled ||
+      document.hidden ||
+      !this.pageDisplayed
+    ) {
       return;
     }
     const seconds = nextDelaySeconds(this.intervalSeconds, this.failures);

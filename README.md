@@ -25,11 +25,11 @@ The **Live Record Component** unlocked package has no namespace, so the API name
 
 Version **1.0.0** is a beta until it's promoted, so for now it can't be installed in production orgs:
 
-- Sandbox: https://test.salesforce.com/packaging/installPackage.apexp?p0=04tbm000000nqGnAAI
+- Sandbox: https://test.salesforce.com/packaging/installPackage.apexp?p0=04tbm000000nqzxAAA
 - Or with the Salesforce CLI:
 
   ```sh
-  sf package install --package 04tbm000000nqGnAAI --target-org <your org> --wait 20
+  sf package install --package 04tbm000000nqzxAAA --target-org <your org> --wait 20
   ```
 
 Choose **Install for Admins Only**; access for everyone else comes from the permission sets.
@@ -91,7 +91,8 @@ Without watched fields, history tracking is still used, when it's on, to show wh
 
 - **Heartbeats.** The component calls `PresenceService.heartbeat` when the page opens and then every heartbeat interval, with ±20% jitter so tabs don't all fire at once. Each call records that the user is on the record, returns the other users seen recently, and reports whether someone else changed the record since the version the page shows (its `LastModifiedDate`, from Lightning Data Service). Heartbeats pause while the browser tab is hidden and resume as soon as it's visible again. After an error, the interval doubles (25, 50, 100 seconds, at most 120), and after three errors in a row the avatars are hidden until a heartbeat succeeds; users never see an error, but admins see it in the status line.
 - **Change detection.** A change alerts when it's newer than the page's version and wasn't made by the user (in any tab) or by an ignored user. With watched fields, it must also be a change to a watched field, recorded in field history, on a field the user can read. Refreshing reloads the record through Lightning Data Service (`notifyRecordUpdateAvailable`), which moves the page's version forward.
-- **Storage.** Presence is kept in the **RecordPresence** Org cache partition, one entry per record holding each user's last-seen time, with a 5-minute time to live. When the partition has no capacity, it's kept in the `Presence` object instead, one row per user per record, and `PresencePurgeJob` hard-deletes rows an hour after their last heartbeat. When a user leaves the page, the component removes them straight away (best effort; otherwise they drop off after about 60 seconds).
+- **Storage.** Presence is kept in the **RecordPresence** Org cache partition, one entry per record holding each user's last-seen time, with a 5-minute time to live. When the partition has no capacity, it's kept in the `Presence` object instead, one row per user per record, and `PresencePurgeJob` hard-deletes rows an hour after their last heartbeat.
+- **Leaving.** When a user navigates elsewhere in Lightning, the record page usually stays alive in the background, hidden. The component notices within 2 seconds, stops its heartbeats and removes the user. It also removes them when the component is destroyed, such as when a console subtab is closed (not yet checked in a console app). Closing the browser tab or window gives it no time to tell the server, so the user drops off after the staleness window instead, about 60 seconds. Other viewers see a departure on their own next heartbeat, up to about 30 seconds later.
 - **Security.** Every heartbeat first queries the record in user mode. If the user can't see it, the heartbeat returns nothing at all, not even who else is on it, and records nothing. Viewers are listed only if the user can see them under user sharing, and field history values only for fields the user can read.
 - **Load.** One Apex call per open record tab per heartbeat: about 2.4 calls a minute at the default interval, fewer while tabs are hidden. Apex calls from Lightning components don't count against the org's API request limits.
 
@@ -104,7 +105,8 @@ Without watched fields, history tracking is still used, when it's on, to show wh
 - Alerts arrive on the next heartbeat, up to about one interval after the change, not instantly.
 - Watched fields only work for fields with field history tracking. Without it, only "the record changed" can be detected.
 - Without watched fields, only the record's last modifier is checked. If a person changes the record and then an ignored integration user changes it, the person's change doesn't alert. Watching fields with history tracking avoids this.
-- Presence only covers users who have the record open, in a visible browser tab, on a page that includes the component. A user with the record open in two tabs who closes one may disappear from the avatars until their other tab's next heartbeat.
+- Presence only covers users who have the record open, on screen, in a visible browser tab, on a page that includes the component. A user with the record open in two tabs who closes or leaves one may disappear from the avatars until their other tab's next heartbeat.
+- A user who closes the browser tab or window stays listed until the staleness window passes: up to about 90 seconds for others, counting their next heartbeat.
 - In console apps, each subtab sends its own heartbeats. A user is listed once however many tabs they have open. (Not yet checked in a console app.)
 
 ## Development
