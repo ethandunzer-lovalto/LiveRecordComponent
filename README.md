@@ -23,7 +23,7 @@ Presence is ephemeral: it lives in Platform Cache, or in a fallback object whose
 
 The **Live Record Component** unlocked package has no namespace, so the API names are the same as in this repo. It can't be installed into an org that has its own namespace.
 
-Version **1.0.0** is a beta until it's promoted, so for now it installs only in sandboxes and scratch orgs:
+Version **1.0.0** is a beta until it's promoted, so for now it can't be installed in production orgs:
 
 - Sandbox: https://test.salesforce.com/packaging/installPackage.apexp?p0=04tbm000000nqFBAAY
 - Or with the Salesforce CLI:
